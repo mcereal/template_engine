@@ -107,7 +107,10 @@ const main = async () => {
   newEmployee(response);
   const goAgain = await additionalEmployee();
   if (goAgain.addAnotherEmployee === "Yes") main();
-  render(employees);
+  else {
+    fs.writeFileSync(outputPath, render(employees), "utf-8");
+    console.log("team.html file created successfully in output folder");
+  }
 };
 
 main();
