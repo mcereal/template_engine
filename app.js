@@ -59,6 +59,8 @@ const USER_PROMPTS = {
       name: "uniqueProperty",
       message: "What school are you attending?",
     },
+  ],
+  additionalEmployee: [
     {
       type: "list",
       name: "addAnotherEmployee",
@@ -68,7 +70,9 @@ const USER_PROMPTS = {
   ],
 };
 
-const promptUser = () => inquirer.prompt(USER_PROMPTS.newEmployee);
+const newEmployeeCriteria = () => inquirer.prompt(USER_PROMPTS.newEmployee);
+const additionalEmployee = () =>
+  inquirer.prompt(USER_PROMPTS.additionalEmployee);
 
 const newEmployee = (response) => {
   if (response.role === "Manager") {
@@ -98,11 +102,12 @@ const newEmployee = (response) => {
   }
 };
 
-promptUser()
-  .then((response) => {
-    newEmployee(response);
-    if (response.addAnotherEmployee === "Yes") {
-      promptUser();
-    }
-  })
-  .catch((err) => console.log(err));
+const main = async () => {
+  const response = await newEmployeeCriteria();
+  newEmployee(response);
+  const goAgain = await additionalEmployee();
+  if (goAgain.addAnotherEmployee === "Yes") main();
+  render(employees);
+};
+
+main();
